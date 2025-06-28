@@ -6,6 +6,7 @@ import Order from "./models/order";
 import Table from "./models/table";
 import { connectToDB } from "./mongoDB";
 import { table } from "console";
+import mongoose from "mongoose";
 
 export async function getMenu() {
     try {
@@ -47,23 +48,39 @@ export async function getOrderSlots() {
         await connectToDB();
         const slots = await Order.find({ status: "pending" });
         return (slots);
-        
-    
+
+
     } catch (error) {
         console.error("Error fetching order slots:", error);
         return [];
-        
+
     }
 }
 export async function getOrderById(orderId: string) {
+
     try {
+        if (!mongoose.Types.ObjectId.isValid(orderId)) {
+            console.error("Invalid orderId:", orderId);
+            return null;
+        }
         await connectToDB();
         const order = await Order.findById(orderId);
         return order;
-      
+
 
     } catch (error) {
         console.error("Error fetching order by ID:", error);
         return null;
+    }
+}
+export async function getOrders() {
+    try {
+        await connectToDB();
+        const orders = await Order.find({}).sort({ createdAt: -1 }).lean();
+        return orders;
+
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        return [];
     }
 }

@@ -4,18 +4,10 @@ import SeleteTable from '@/components/SeleteTable';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { MinusCircle, PlusCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { v4 as uuidv4 } from "uuid";
 
 
 
@@ -36,6 +28,7 @@ const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) 
   const cart = CartUse();
 
   type CartItem = {
+    id: string;
     item: ProductDetailsType;
     quantity: number;
     size: string;
@@ -185,8 +178,17 @@ const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) 
         <Button
           className="bg-blue-800 text-white hover:bg-blue-900"
           onClick={() => {
+           
+            
             cart.addItem({
-              item: productDetails!, quantity, size: selectedSize, table: tables
+             
+            id: crypto.randomUUID(), 
+            item: productDetails!, 
+            quantity, 
+            size: selectedSize, 
+            table: tables, 
+            note: "pending"
+   
             });
             route.push("/cart")
 

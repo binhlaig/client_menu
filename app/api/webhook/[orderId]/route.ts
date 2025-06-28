@@ -9,20 +9,17 @@ export const PATCH = async (req: NextRequest, { params }: { params: Promise<{ or
         const { updatecartItem } = await req.json();
 
         await connectToDB();
-
-        // const updatedOrder = await Order.findByIdAndUpdate(
-        //     orderId,
-        //     {
-        //         cart: updatecartItem,
-        //         total: updatecartItem.reduce((acc: number, item: { item: { price: number }; quantity: number }) => acc + (item.item.price * item.quantity), 0),
-        //     },
-        //     { new: true } // Return the updated document
-        // );
+        // Add note: "pending" to each cart item
+        const itemsWithNote = updatecartItem.map((item: any) => ({
+            ...item,
+            note: "pending",
+        }));
 
         const updatedOrder = await Order.findByIdAndUpdate(
             orderId,
             {
-                $push: { cart: { $each: updatecartItem } },
+                // $push: { cart: { $each: updatecartItem } }, 
+                $push: { cart: { $each: itemsWithNote } },
 
             },
             { new: true }

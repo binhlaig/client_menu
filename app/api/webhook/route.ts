@@ -1,7 +1,7 @@
 import Order from "@/lib/models/order";
 import { connectToDB } from "@/lib/mongoDB";
 import { request } from "http";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -16,7 +16,7 @@ export const POST = async (req: NextRequest) => {
 
     } catch (error) {
         console.error("Error processing webhook:", error);
-        return new Response("Internal Server Error", { status: 500 });
+        return NextResponse.json({ success: false }, { status: 500 });
 
     }
 }
