@@ -1,30 +1,31 @@
 "use client";
-import CartUse from '@/components/hook/CartUse';
-import SeleteTable from '@/components/SeleteTable';
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react'
-import toast from 'react-hot-toast';
-import { MinusCircle, PlusCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import CartUse from "@/components/hook/CartUse";
+import SeleteTable from "@/components/SeleteTable";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { MinusCircle, PlusCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from "uuid";
 
-
-
-
-const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) => {
-
-  const [productDetails, setProductDetails] = useState<(ProductDetailsType & { getFilteredSelectedRowModel: () => void }) | null>(
-    null
-  );
+const productDetailpage = ({
+  params,
+}: {
+  params: Promise<{ menuId: string }>;
+}) => {
+  const [productDetails, setProductDetails] = useState<
+    (ProductDetailsType & { getFilteredSelectedRowModel: () => void }) | null
+  >(null);
   const [tables, setTable] = useState<string>("");
-  const [tableDetails, setTableDetails] = useState<(TableType & { getFilteredSelectedRowModel: () => void }) | null>(
-    null
-  );
+  const [tableDetails, setTableDetails] = useState<
+    (TableType & { getFilteredSelectedRowModel: () => void }) | null
+  >(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState<string>("");
 
   const [quantity, setQuantity] = useState<number>(1);
+
   const cart = CartUse();
 
   type CartItem = {
@@ -33,8 +34,7 @@ const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) 
     quantity: number;
     size: string;
     table: string;
-  }
-
+  };
 
   const route = useRouter();
 
@@ -54,15 +54,11 @@ const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) 
       setLoading(false);
       toast.success("Product details fetched successfully", {
         icon: "✅",
-
-      }
-      );
+      });
     } catch (error) {
       console.error("Error fetching product details:", error);
-
     }
-
-  }
+  };
   const fetchTableDetails = async () => {
     try {
       const response = await fetch("/api/table", {
@@ -76,16 +72,22 @@ const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) 
       toast.success("Table details fetched successfully", {
         icon: "✅",
       });
-
     } catch (error) {
       console.error("Error fetching table details:", error);
       toast.error("Failed to fetch table details", {
         icon: "❌",
       });
-
     }
-  }
+  };
 
+  const getAdjustedPrice = () => {
+    if (!productDetails) return 0;
+    let basePrice = Number(productDetails.price) || 0;
+    if (selectedSize === "L") {
+      basePrice += Number(200);
+    }
+    return basePrice;
+  };
 
   useEffect(() => {
     fetchProductDetails();
@@ -101,14 +103,14 @@ const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) 
           src={productDetails?.image || "/noimage.jpeg"}
           alt="product"
           width={400}
-          height={300} />
+          height={300}
+        />
       </div>
-      <div className='max-w-[400px] flex flex-col gap-4'>
-        <div className='flex justify-between items-center'>
+      <div className="max-w-[400px] flex flex-col gap-4">
+        <div className="flex justify-between items-center">
           <p className="text-black font-bold text-2xl">
             {productDetails?.producttype}
           </p>
-
         </div>
         <div className="flex gap-2">
           <p className="text-base text-gray-500">Menu Id :</p>
@@ -117,7 +119,8 @@ const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) 
 
         <div className="flex gap-2">
           <p className="text-base "> Price:</p>
-          <p className=" font-bold">{productDetails?.price} 円 </p>
+          {/* <p className=" font-bold">{productDetails?.price} 円 </p> */}
+          <p className="font-bold">{getAdjustedPrice()} 円</p>
         </div>
         <div className="flex gap-2">
           <p className="text-base "> Descripton :</p>
@@ -129,37 +132,36 @@ const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) 
             {productDetails?.size?.map((size, index) => (
               <p
                 key={index}
-                className={`cursor-pointer hover:outline px-2 py-1 rounded-lg  ${selectedSize === size &&
+                className={`cursor-pointer hover:outline px-2 py-1 rounded-lg  ${
+                  selectedSize === size &&
                   "bg-blue-800 text-white border border-blue-900 px-2 py-1 rounded-lg"
-                  }`}
+                }`}
                 onClick={() => setSelectedSize(size)}
               >
                 {size}
               </p>
             ))}
           </div>
-
         </div>
 
         <div>
           <p className="text-base p-2">Table</p>
           <div className="flex gap-2">
-            {Array.isArray(tableDetails) && tableDetails.map((table: any) => (
-              <p
-                key={table._id}
-                className={`cursor-pointer hover:outline px-2 py-1 rounded-lg  ${tables === table.tableNumber &&
-                  "bg-blue-800 text-white border border-blue-900 px-2 py-1 rounded-lg"
+            {Array.isArray(tableDetails) &&
+              tableDetails.map((table: any) => (
+                <p
+                  key={table._id}
+                  className={`cursor-pointer hover:outline px-2 py-1 rounded-lg  ${
+                    tables === table.tableNumber &&
+                    "bg-blue-800 text-white border border-blue-900 px-2 py-1 rounded-lg"
                   }`}
-                onClick={() => setTable(table.tableNumber)}
-              >
-                {table.tableNumber}
-              </p>
-            ))}
+                  onClick={() => setTable(table.tableNumber)}
+                >
+                  {table.tableNumber}
+                </p>
+              ))}
           </div>
         </div>
-
-
-
 
         <div className="flex flex-col gap-2">
           <p className="text-ms text-gray-500">Qiantity</p>
@@ -178,28 +180,26 @@ const productDetailpage = ({ params }: { params: Promise<{ menuId: string }> }) 
         <Button
           className="bg-blue-800 text-white hover:bg-blue-900"
           onClick={() => {
-           
-            
             cart.addItem({
-             
-            id: crypto.randomUUID(), 
-            item: productDetails!, 
-            quantity, 
-            size: selectedSize, 
-            table: tables, 
-            note: "pending"
-   
+              id: crypto.randomUUID(),
+              // item: productDetails!,
+              item: {
+                ...productDetails!,
+                price: String(getAdjustedPrice()),
+              },
+              quantity,
+              size: selectedSize,
+              table: tables,
+              note: "pending",
             });
-            route.push("/cart")
-
+            route.push("/cart");
           }}
-
         >
           Add to cart
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default productDetailpage;
