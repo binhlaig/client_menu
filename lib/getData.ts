@@ -8,6 +8,14 @@ import { connectToDB } from "./mongoDB";
 import { table } from "console";
 import mongoose from "mongoose";
 
+interface OrderType {
+    _id: string;
+    createdAt?: string;
+    updatedAt?: string;
+    // Add other fields your Order schema includes
+    [key: string]: any;
+  }
+
 export async function getMenu() {
     try {
         await connectToDB();
@@ -56,23 +64,55 @@ export async function getOrderSlots() {
 
     }
 }
-export async function getOrderById(orderId: string) {
 
+
+// export async function getOrderById(orderId: string) {
+
+//     try {
+//         if (!mongoose.Types.ObjectId.isValid(orderId)) {
+//             console.error("Invalid orderId:", orderId);
+//             return null;
+//         }
+//         await connectToDB();
+//         const order = await Order.findById(orderId);
+//         return order;
+
+
+
+//     } catch (error) {
+//         console.error("Error fetching order by ID:", error);
+//         return null;
+//     }
+// }
+
+export async function getOrderById(orderId: string): Promise<OrderType | null> {
     try {
-        if (!mongoose.Types.ObjectId.isValid(orderId)) {
-            console.error("Invalid orderId:", orderId);
-            return null;
-        }
-        await connectToDB();
-        const order = await Order.findById(orderId);
-        return order;
-
-
-    } catch (error) {
-        console.error("Error fetching order by ID:", error);
+      if (!mongoose.Types.ObjectId.isValid(orderId)) {
+        console.error("Invalid orderId:", orderId);
         return null;
+      }
+  
+      await connectToDB();
+  
+      const order = await Order.findById(orderId).lean() as OrderType | null; // Ensure it's treated as a single object
+  
+      if (!order) return null;
+  
+      // Convert to a serializable format
+      const serializedOrder: OrderType = {
+        ...order,
+        _id: order._id.toString(),
+        createdAt: order.createdAt?.toString(),
+        updatedAt: order.updatedAt?.toString(),
+      };
+  
+      return serializedOrder;
+    } catch (error) {
+      console.error("Error fetching order by ID:", error);
+      return null;
     }
-}
+  }
+
 export async function getOrders() {
     try {
         await connectToDB();

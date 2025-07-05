@@ -69,3 +69,4 @@ const MenuList = async () => {
   );
 };
 export default MenuList;
+
