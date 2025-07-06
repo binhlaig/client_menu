@@ -2,128 +2,128 @@
 import CartUse from "@/components/hook/CartUse";
 import { Button } from "@/components/ui/button";
 import { MinusCircle, PlusCircle, Trash2 } from "lucide-react";
-import Image from "next/image"
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-
-
-const cartpage = () => {
+const CartPage = () => {
   const cart = CartUse();
-  const route = useRouter();
+  const router = useRouter();
 
   const total = cart.cartItems.reduce(
     (acc, cartItem) => acc + Number(cartItem.item.price) * cartItem.quantity,
     0
   );
-
   const totalRounded = parseFloat(total.toFixed(2));
+
   const getOrder = async () => {
+    if (cart.cartItems.length === 0) {
+      toast.error("Your cart is empty.");
+      return;
+    }
     try {
       const response = await fetch("/api/webhook", {
         method: "POST",
-        body: JSON.stringify({cartitems: cart.cartItems}),
-
+        body: JSON.stringify({ cartitems: cart.cartItems }),
       });
       if (response.ok) {
         toast.success("Order placed successfully!");
-        
       }
-      route.push("/Success");
-      
-      
+      router.push("/Success");
     } catch (error) {
       console.error("Error fetching order:", error);
-      return new Response("Internal Server Error", { status: 500 });
     }
-  }
+  };
 
   return (
-    <div className="flex gap-20 py-16 px-10">
-      <div className="w-2/3">
-        <p className="font-bold">Shopping Cart</p>
-        <hr />
+    <div className="flex flex-col lg:flex-row gap-10 py-10 px-4 md:px-10">
+      {/* Cart Items */}
+      <div className="w-full lg:w-2/3">
+        <p className="text-xl font-bold mb-4">Shopping Cart</p>
+        <hr className="mb-4" />
 
         {cart.cartItems.length === 0 ? (
-          <p className="flex hover:bg-gray-100 px-6 py-5 justify-center items-center">
-            no cart
-          </p>
+          <div className="text-center py-10 text-gray-500">
+            No items in cart.
+          </div>
         ) : (
-          <div>
+          <div className="space-y-6">
             {cart.cartItems.map((cartItem) => (
-              <div className="w-full flex hover:bg-gray-100 px-6 py-5 justify-between items-center">
-                <div className="flex items-center">
+              <div
+                key={cartItem.item._id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-white rounded-md shadow-sm"
+              >
+                {/* Left side: image & product info */}
+                <div className="flex flex-1 gap-4">
                   <Image
                     src={cartItem.item.image || "/noimage.jpeg"}
                     alt="product"
-                    width={70}
-                    height={70}
-                    className="rounded-sm w-28 h-28 object-cover"
+                    width={80}
+                    height={80}
+                    className="rounded w-24 h-24 object-cover"
                   />
-                  <div className="flex flex-col gap-3 ml-4">
+                  <div className="flex flex-col gap-2 text-sm">
                     <p className="font-bold">{cartItem.item.productname}</p>
-                    {cartItem.size && (
-                      <p className="text-sm">{cartItem.size}</p>
-                    )}
+                    {cartItem.size && <p>Size: {cartItem.size}</p>}
+                    <p>Menu ID: {cartItem.item.barcode}</p>
+                    {cartItem.table && <p>Table: {cartItem.table}</p>}
                   </div>
-                  <div className="flex flex-col gap-3 ml-4">
-                    <p className="text-sm">Menu Id : {cartItem.item.barcode}</p>
-
-
-                  </div>
-
                 </div>
 
-                <div className="flex gap-4 items-center">
+                {/* Quantity and price controls */}
+                <div className="flex items-center gap-3">
                   <MinusCircle
-                    className="hover:text-red-600 cursor-pointer"
+                    className="cursor-pointer hover:text-red-600"
                     onClick={() => cart.decreaseQuantity(cartItem.item._id)}
                   />
-                  <p className=" text-black">{cartItem.quantity}</p>
+                  <span>{cartItem.quantity}</span>
                   <PlusCircle
-                    className="hover:text-red-600 cursor-pointer"
+                    className="cursor-pointer hover:text-green-600"
                     onClick={() => cart.increaseQuantity(cartItem.item._id)}
                   />
                 </div>
-                <p className="font-bold">
-                  {Number(cartItem.item.price) * cartItem.quantity} ¥{" "}
-                </p>
-                <p className="flex flex-col items-end">
-                  {cartItem.table && (
-                    <p className="text-bold">Table : {cartItem.table}</p>
 
-                  )}
-                </p>
-                <Trash2
-                  className="hover:text-red-600 cursor-pointer"
-                  onClick={() => cart.removeItem(cartItem.item._id)}
-                />
+                {/* Price & Remove */}
+                <div className="flex flex-col items-end justify-between gap-2">
+                  <p className="font-bold">
+                    {Number(cartItem.item.price) * cartItem.quantity} ¥
+                  </p>
+                  <Trash2
+                    className="cursor-pointer text-red-500 hover:text-red-700"
+                    onClick={() => cart.removeItem(cartItem.item._id)}
+                  />
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      <div className="w-1/3 max-lg:w-full flex flex-col gap-8 bg-gray-100 rounded-lg px-4 py-5">
-        <p className="text-heading4-bold pb-4">
+      {/* Summary */}
+      <div className="w-full lg:w-1/3 bg-gray-100 p-6 rounded-md shadow-sm">
+        <p className="text-lg font-semibold mb-4">
           Summary{" "}
-          <span>{`(${cart.cartItems.length} ${cart.cartItems.length > 1 ? "items" : "item"
-            })`}</span>
+          <span className="text-sm text-gray-500">
+            ({cart.cartItems.length}{" "}
+            {cart.cartItems.length > 1 ? "items" : "item"})
+          </span>
         </p>
-        <div className="flex justify-between">
+
+        <div className="flex justify-between mb-6 text-sm">
           <span>Total Amount</span>
-          <span>{totalRounded} ¥</span>
+          <span className="font-semibold">{totalRounded} ¥</span>
         </div>
+
         <Button
-          className="bg-black text-white hover:bg-gray-800"
           onClick={getOrder}
+          disabled={cart.cartItems.length === 0}
+          className="w-full bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Proceed to Checkout
         </Button>
       </div>
     </div>
-  );;
+  );
+};
 
-}
-
-export default cartpage
+export default CartPage;

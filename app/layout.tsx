@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/header/Header";
 import Provider from "@/lib/Provider";
 import ToasterProvider from "@/lib/ToasterProviter";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Provider>
-          <ToasterProvider/>
-          {children}
+          <ToasterProvider />
+         
+            {children}
+         
         </Provider>
-
       </body>
     </html>
   );

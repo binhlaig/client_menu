@@ -30,6 +30,7 @@ export async function getMenu() {
             image: menu.image || "/wall-apple.jpeg",
             tags: menu.tags || [],
             size: menu.size || [],
+            status: menu.status || "available",
             createdAt: menu.createdAt.toISOString(),
             updatedAt: menu.updatedAt.toISOString(),
         }));

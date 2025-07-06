@@ -20,6 +20,7 @@ type MenuType = {
   tags: [string];
   size: [string];
   price: string;
+  status: "available" | "out-of-order";
   createdAt: Date;
   updatedAt: Date;
   // REMOVE or make optional:

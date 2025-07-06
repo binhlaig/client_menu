@@ -71,7 +71,7 @@ const MenuSlider = ({ menuData }: { menuData: MenuType[] }) => {
                         }}
                       />
 
-                      <div className="w-full text-center mt-4">
+                      {/* <div className="w-full text-center mt-4">
                         <Link
                           href={`/menus/${menu._id}`}
                           className="w-full mt-2"
@@ -83,7 +83,37 @@ const MenuSlider = ({ menuData }: { menuData: MenuType[] }) => {
                             Order Now
                           </Button>
                         </Link>
+                      </div> */}
+                        <div className="w-full text-center mt-4">
+                      <div className="w-full text-center mt-4">
+                        {menu.status === "out-of-order" ? (
+                          <div className="w-full py-2 rounded border border-red-600 text-red-600 font-semibold bg-red-100 cursor-not-allowed">
+                            Out of Order
+                          </div>
+                        ) : (
+                          <Link
+                            href={`/menus/${menu._id}`}
+                            className="w-full mt-2"
+                          >
+                            <Button
+                              variant="outline"
+                              className="w-full border-blue-950 text-blue-950 hover:bg-blue-950 hover:text-white"
+                            >
+                              Order Now
+                            </Button>
+                          </Link>
+                        )}
                       </div>
+                      {/* <Link href={`/menus/${menus._id}`} className="w-full mt-2">
+                        <Button
+                          variant="outline"
+                          className="w-full border-blue-950 text-blue-950 hover:bg-blue-950 hover:text-white"
+                        >
+                          Order Now
+                        </Button>
+                      </Link> */}
+                    </div>
+
                     </div>
                   </div>
                 ))}
