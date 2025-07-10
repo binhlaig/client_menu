@@ -8,7 +8,7 @@ export async function GET() {
 
   const orders = await Order.find().lean();
   const pendingOrders = orders.filter(order =>
-    order.cart.some((item: { note: string }) => item.note === "pending")
+    order.cart.some((item: { note: string }) => item.note === "processing")
   );
 
   return NextResponse.json(pendingOrders);

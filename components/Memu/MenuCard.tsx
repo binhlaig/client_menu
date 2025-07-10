@@ -12,7 +12,6 @@
 // // import { GiPriceTag } from "react-icons/gi";
 // // import { Button } from "../ui/button";
 
-
 // // const MenuCard = ({ menu }: { menu: MenuType }) => {
 // //     const img = menu.image ? menu.image : "/wall-apple.jpeg";
 // //     return (
@@ -63,7 +62,6 @@
 
 // // export default MenuCard
 
-
 // import {
 //     Card,
 //     CardContent,
@@ -74,10 +72,10 @@
 //   import { LuPartyPopper } from "react-icons/lu";
 //   import { GiPriceTag } from "react-icons/gi";
 //   import { Button } from "../ui/button";
-  
+
 //   const MenuCard = ({ menu }: { menu: MenuType }) => {
 //     const img = menu.image ? menu.image : "/wall-apple.jpeg";
-  
+
 //     return (
 //       <Card className="w-full max-w-xs overflow-hidden bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl shadow hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
 //         <CardContent className="p-0">
@@ -91,12 +89,12 @@
 //             />
 //           </Link>
 //         </CardContent>
-  
+
 //         <CardFooter className="flex flex-col items-start gap-2 p-4">
 //           <h3 className="text-lg font-bold text-gray-800 dark:text-white truncate w-full">
 //             {menu.productname}
 //           </h3>
-  
+
 //           <div className="flex justify-between w-full text-sm text-gray-600 dark:text-gray-300">
 //             <p className="flex items-center gap-1">
 //               <LuPartyPopper className="text-green-600" />
@@ -107,7 +105,7 @@
 //               {menu.price} ¥
 //             </p>
 //           </div>
-  
+
 //           <Link href={`/menus/${menu._id}`} className="w-full mt-2">
 //             <Button
 //               variant="outline"
@@ -120,14 +118,10 @@
 //       </Card>
 //     );
 //   };
-  
+
 //   export default MenuCard;
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import { LuPartyPopper } from "react-icons/lu";
@@ -140,15 +134,13 @@ const MenuCard = ({ menu }: { menu: MenuType }) => {
   return (
     <Card className="w-full max-w-xs bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-700 shadow-md transition-transform duration-300 hover:scale-[1.03] hover:shadow-lg">
       <CardContent className="p-0">
-        <Link href={`/menus/${menu._id}`}>
-          <Image
-            src={img}
-            alt={menu.productname}
-            width={400}
-            height={300}
-            className="w-full h-44 object-cover rounded-t-2xl transition-all duration-300 hover:brightness-95"
-          />
-        </Link>
+        <Image
+          src={img}
+          alt={menu.productname}
+          width={400}
+          height={300}
+          className="w-full h-44 object-cover rounded-t-2xl transition-all duration-300 hover:brightness-95"
+        />
       </CardContent>
 
       <CardFooter className="flex flex-col items-start gap-3 p-4">
@@ -174,5 +166,3 @@ const MenuCard = ({ menu }: { menu: MenuType }) => {
 };
 
 export default MenuCard;
-
-  

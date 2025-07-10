@@ -50,7 +50,7 @@ export async function PUT(
       },
       {
         $set: {
-          "cart.$.note": note || "processing",
+          "cart.$.note": note || "completed",
         },
       },
       { new: true }

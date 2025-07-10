@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth";
 import Header from "@/components/header/Header";
 
+
 export default async function AdminLayout({
     children,
 }: Readonly<{
@@ -20,6 +21,7 @@ export default async function AdminLayout({
 
     return (
         <div className="">
+           
             <Header />
             {children}
         </div>

@@ -26,12 +26,12 @@ const PendingOrders = () => {
 
   return (
     <div className="flex gap-10 py-8 px-6 w-full flex-col">
-      <p className="font-bold">Pending Orders</p>
+      <p className="font-bold">Processing Orders</p>
       <hr />
       {orders.map((order, index) => (
         <div key={order._id || index}>
           {order.cart
-            .filter((menu: any) => menu.note === "pending")
+            .filter((menu: any) => menu.note === "processing")
             .map((menu: any) => (
               <div
                 key={menu.id}
